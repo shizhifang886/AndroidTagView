@@ -399,7 +399,13 @@ public class TagView extends View {
                 canvas.clipPath(mPath);
                 mPath.addRoundRect(mRectF, mBorderRadius, mBorderRadius, Path.Direction.CCW);
 
-                canvas.clipPath(mPath, Region.Op.REPLACE);
+                // 针对1.1.5版本适配Android 9 by shizf
+                // 参考 https://github.com/whilu/AndroidTagView/issues/88
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    canvas.clipPath(mPath);
+                } else {
+                    canvas.clipPath(mPath, Region.Op.REPLACE);
+                }
                 canvas.drawCircle(mTouchX, mTouchY, mRippleRadius, mRipplePaint);
                 canvas.restore();
             }catch (UnsupportedOperationException e){
